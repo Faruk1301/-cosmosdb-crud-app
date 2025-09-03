@@ -19,23 +19,17 @@
         <button onclick="updateProduct()">Update</button>
     </div>
 
-    <h2>Products List</h2>
-    <table border="1" id="productsTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <div class="form-section">
+        <h2>Read / Delete Product</h2>
+        <input id="readId" placeholder="ID">
+        <input id="readCategory" placeholder="Category">
+        <button onclick="readProduct()">Read</button>
+        <button onclick="deleteProduct()">Delete</button>
+    </div>
 
+    <h2>Output</h2>
     <pre id="output"></pre>
 
     <script src="script.js"></script>
 </body>
 </html>
-
