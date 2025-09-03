@@ -80,3 +80,4 @@ def delete_product(req):
         return func.HttpResponse(f"Product {product_id} deleted successfully!")
     except exceptions.CosmosResourceNotFoundError:
         return func.HttpResponse("Product not found", status_code=404)
+
