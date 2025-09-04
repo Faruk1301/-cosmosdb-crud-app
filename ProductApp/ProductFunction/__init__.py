@@ -2,7 +2,7 @@ import logging
 import azure.functions as func
 import json
 import os
-from azure.cosmos import CosmosClient, PartitionKey, exceptions
+from azure.cosmos import CosmosClient, exceptions
 
 # Cosmos DB config
 URL = os.environ["COSMOS_URL"]
@@ -16,35 +16,33 @@ container = database.get_container_client(CONTAINER_NAME)
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     try:
-        action = req.params.get('action')
-        if not action:
-            try:
-                req_body = req.get_json()
-                action = req_body.get('action')
-            except ValueError:
-                return func.HttpResponse("Please provide an action", status_code=400)
+        method = req.method
 
-        if action == "create":
+        if method == "POST":
             return create_product(req)
-        elif action == "read":
+        elif method == "GET":
             return read_product(req)
-        elif action == "update":
+        elif method == "PUT":
             return update_product(req)
-        elif action == "delete":
+        elif method == "DELETE":
             return delete_product(req)
         else:
-            return func.HttpResponse("Invalid action", status_code=400)
+            return func.HttpResponse("Method not allowed", status_code=405)
     except Exception as e:
         logging.error(str(e))
         return func.HttpResponse(f"Error: {str(e)}", status_code=500)
 
-# CRUD functions
+# --- CRUD functions ---
+
 def create_product(req):
     product = req.get_json()
     if "id" not in product or "Category" not in product:
         return func.HttpResponse("ID and Category are required!", status_code=400)
-    container.create_item(body=product)
-    return func.HttpResponse(f"Product {product['id']} created successfully!", status_code=201)
+    try:
+        container.create_item(body=product)
+        return func.HttpResponse(f"Product {product['id']} created successfully!", status_code=201)
+    except exceptions.CosmosResourceExistsError:
+        return func.HttpResponse(f"Product {product['id']} already exists!", status_code=409)
 
 def read_product(req):
     product_id = req.params.get('id')
@@ -74,5 +72,3 @@ def delete_product(req):
         return func.HttpResponse(f"Product {product_id} deleted successfully!")
     except exceptions.CosmosResourceNotFoundError:
         return func.HttpResponse("Product not found", status_code=404)
-
-
