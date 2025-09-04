@@ -1,30 +1,35 @@
-const apiUrl = "https://crud-db.azurewebsites.net/api/ProductFunction";
 
-// Example: Get all products
-async function getProducts() {
-    try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        console.log(data); // you can populate HTML table
-    } catch (error) {
-        console.error(error);
-    }
+const apiUrl = "https://crud-db-standard.azurewebsites.net/api/ProductFunction";
+
+async function createOrUpdate(action) {
+    const product = {
+        id: document.getElementById("id").value,
+        Name: document.getElementById("name").value,
+        Category: document.getElementById("category").value,
+        Price: document.getElementById("price").value,
+        action: action
+    };
+    await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product)
+    });
+    document.getElementById("output").innerText = `${action} operation done`;
 }
 
-// Example: Add product
-async function addProduct(product) {
-    try {
-        await fetch(apiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(product)
-        });
-        getProducts(); // refresh table
-    } catch (error) {
-        console.error(error);
-    }
+async function readProduct() {
+    const id = document.getElementById("readId").value;
+    const category = document.getElementById("readCategory").value;
+    const res = await fetch(`${apiUrl}?action=read&id=${id}&category=${category}`);
+    const data = await res.json();
+    document.getElementById("output").innerText = JSON.stringify(data, null, 2);
 }
 
-// Call getProducts on page load
-window.onload = getProducts;
+async function deleteProduct() {
+    const id = document.getElementById("readId").value;
+    const category = document.getElementById("readCategory").value;
+    await fetch(`${apiUrl}?action=delete&id=${id}&category=${category}`);
+    document.getElementById("output").innerText = `Deleted ${id}`;
+}
+
 
