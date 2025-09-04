@@ -1,33 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products CRUD App</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Products CRUD App</h1>
-
-    <div class="form-section">
-        <h2>Create / Update Product</h2>
+    <h2>Products CRUD App</h2>
+    <div>
+        <h3>Create / Update Product</h3>
         <input id="id" placeholder="ID">
         <input id="name" placeholder="Name">
         <input id="category" placeholder="Category">
         <input id="price" placeholder="Price">
-        <button onclick="createProduct()">Create</button>
-        <button onclick="updateProduct()">Update</button>
+        <button onclick="createOrUpdate('create')">Create</button>
+        <button onclick="createOrUpdate('update')">Update</button>
     </div>
 
-    <div class="form-section">
-        <h2>Read / Delete Product</h2>
+    <div>
+        <h3>Read / Delete Product</h3>
         <input id="readId" placeholder="ID">
         <input id="readCategory" placeholder="Category">
         <button onclick="readProduct()">Read</button>
         <button onclick="deleteProduct()">Delete</button>
     </div>
 
-    <h2>Output</h2>
     <pre id="output"></pre>
 
     <script src="script.js"></script>
