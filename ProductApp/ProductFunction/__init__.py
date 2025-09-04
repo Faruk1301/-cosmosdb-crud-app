@@ -4,7 +4,7 @@ import json
 import os
 from azure.cosmos import CosmosClient, exceptions
 
-# Cosmos DB config
+# Cosmos DB config (from Function App Application Settings)
 URL = os.environ["COSMOS_URL"]
 KEY = os.environ["COSMOS_KEY"]
 DATABASE_NAME = os.environ["DATABASE_NAME"]
@@ -31,6 +31,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     except Exception as e:
         logging.error(str(e))
         return func.HttpResponse(f"Error: {str(e)}", status_code=500)
+
 
 # --- CRUD functions ---
 
@@ -72,3 +73,4 @@ def delete_product(req):
         return func.HttpResponse(f"Product {product_id} deleted successfully!")
     except exceptions.CosmosResourceNotFoundError:
         return func.HttpResponse("Product not found", status_code=404)
+
