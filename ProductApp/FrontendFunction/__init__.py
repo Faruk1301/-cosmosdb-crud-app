@@ -8,8 +8,9 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         file_name = req.route_params.get('file') or 'index.html'
         file_path = os.path.join(os.path.dirname(__file__), file_name)
 
+        # Check if file exists
         if not os.path.exists(file_path) or os.path.isdir(file_path):
-            return func.HttpResponse("File not found", status_code=404)
+            return func.HttpResponse(f"File not found: {file_name}", status_code=404)
 
         # Detect MIME type automatically
         mimetype, _ = mimetypes.guess_type(file_path)
@@ -24,6 +25,5 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     except Exception as e:
         return func.HttpResponse(f"Internal Server Error: {str(e)}", status_code=500)
-
 
 
