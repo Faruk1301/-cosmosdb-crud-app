@@ -4,7 +4,7 @@ import json
 import os
 from azure.cosmos import CosmosClient, exceptions
 
-# Cosmos DB config (from Function App Application Settings)
+# Cosmos DB config (variables already set in Function App settings)
 URL = os.environ["COSMOS_URL"]
 KEY = os.environ["COSMOS_KEY"]
 DATABASE_NAME = os.environ["DATABASE_NAME"]
@@ -32,7 +32,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.error(str(e))
         return func.HttpResponse(f"Error: {str(e)}", status_code=500)
 
-
 # --- CRUD functions ---
 
 def create_product(req):
@@ -47,7 +46,7 @@ def create_product(req):
 
 def read_product(req):
     product_id = req.params.get('id')
-    category = req.params.get('category')
+    category = req.params.get('Category')  # keep same as partition key
     if not product_id or not category:
         return func.HttpResponse("ID and Category are required!", status_code=400)
     try:
@@ -65,7 +64,7 @@ def update_product(req):
 
 def delete_product(req):
     product_id = req.params.get('id')
-    category = req.params.get('category')
+    category = req.params.get('Category')
     if not product_id or not category:
         return func.HttpResponse("ID and Category are required!", status_code=400)
     try:
